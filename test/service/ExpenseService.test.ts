@@ -1,17 +1,23 @@
-import {Expense} from "../../src/domain/Expense";
+import {Expense} from "../../src/domain/entities/Expense";
 import {ExpenseService} from "../../src/service/ExpenseService";
 import {Repository} from "typeorm";
-import {deepEqual, instance, mock, verify} from "ts-mockito";
+import {deepEqual, instance, mock, verify, when} from "ts-mockito";
 import {ValidationError} from "../../src/domain/validation/ValidationError";
+import connectDB from "../../src/datasource";
+import {jest} from '@jest/globals'
+
+jest.mock('../../src/datasource', () => ({
+    getRepository: jest.fn(),
+}));
 
 describe('The Expense Service', () => {
 
-    let expenseService: ExpenseService;
-    let expenseRepository: Repository<Expense>;
+    const expenseRepository = mock<Repository<Expense>>();
+    const expenseService = new ExpenseService();
 
     beforeEach(() => {
-        expenseRepository = mock<Repository<Expense>>();
-        expenseService = new ExpenseService(instance(expenseRepository));
+        const connectDBMock = connectDB as jest.Mocked<typeof connectDB>;
+        connectDBMock.getRepository.mockReturnValue(instance(expenseRepository));
     })
 
     it('should call the repository given a valid Expense', async () => {
@@ -29,8 +35,6 @@ describe('The Expense Service', () => {
         }
 
         const validationError = new ValidationError([error])
-
         await expect(expenseService.save(expense)).rejects.toThrowError(validationError);
-
     });
 })

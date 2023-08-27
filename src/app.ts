@@ -1,13 +1,12 @@
 import express from 'express'
+import {ExpenseController} from "./controller/ExpenseController";
+import {initDatabasePool} from "./datasource";
 
 const app = express()
-const port = 3000
+app.use(express.json())
 
-app.get('/hello', (req, res) =>  {
-    res.send('hey mate')
-})
+const expenseController = new ExpenseController();
+app.post('/expense/', expenseController.postExpense)
 
-app.listen(port, () => {
-    console.log(`serving on port ${port}`)
-})
+export default app;
 

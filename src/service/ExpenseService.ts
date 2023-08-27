@@ -1,10 +1,10 @@
-import {Expense} from "../domain/Expense";
-import {Repository} from "typeorm";
+import {Expense} from "../domain/entities/Expense";
 import {ValidationError} from "../domain/validation/ValidationError";
+import connectDB from "../datasource";
+import ConnectDb from "../datasource";
 
 export class ExpenseService {
 
-    constructor(private expenseRepository: Repository<Expense>) { }
     async save(expense: Expense): Promise<void> {
         const validationErrors = new Array<Record<string, string>>();
         if (expense.value == 0) {
@@ -16,6 +16,6 @@ export class ExpenseService {
             throw new ValidationError(validationErrors);
         }
 
-        await this.expenseRepository.save(expense);
+        await connectDB.getRepository(Expense).save(expense);
     }
 }

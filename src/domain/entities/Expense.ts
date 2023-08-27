@@ -8,7 +8,6 @@ export class Expense {
         this.description = description;
     }
 
-
     @PrimaryGeneratedColumn()
     id: number;
 
