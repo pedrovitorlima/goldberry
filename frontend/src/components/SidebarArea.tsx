@@ -3,7 +3,7 @@ import {Grid} from "@mui/material";
 
 export const SidebarArea: FC = (): ReactElement => {
     return (
-        <Grid item md={4} sx={{
+        <Grid item md={5} sx={{
             height: '100vh',
             position: 'fixed',
             right: 0,
